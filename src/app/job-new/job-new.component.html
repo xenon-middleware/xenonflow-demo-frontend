@@ -1,0 +1,26 @@
+<h2>New Job</h2>
+<form [formGroup]="jobForm" novalidate>
+  <fieldset>
+    <legend>Name and Workflow</legend>
+    <label class="center-block">Job Name:
+      <input class="form-control" formControlName="name">
+    </label>
+    <br />
+    <label class="center-block">Workflow File:
+      <input type="file" #fileInput class="form-control">
+    </label>
+    <button class="btn btn-primary" (click)="processWorkflow()">GO</button>
+    <p>Form value: {{ jobForm.value | json }}</p>
+    <p>Form status: {{ jobForm.status | json }}</p>
+  </fieldset>
+  <fieldset *ngIf="inputs.length > 0" [formGroup]="inputControls">
+    <legend>Inputs</legend>
+    <div *ngFor="let input of inputs">
+      <label class="center-block">{{input.id}}:
+        <input *ngIf="input.type === 'file'" id="{{input.id}}" #inputFileInput class="form-control" type="{{input.type}}">
+        <input *ngIf="input.type !== 'file'" id="{{input.id}}" class="form-control" formControlName="{{input.id}}" type="{{input.type}}">
+      </label>
+    </div>
+    <button class="btn btn-primary" (click)="submit()">Submit</button>
+  </fieldset>
+</form>

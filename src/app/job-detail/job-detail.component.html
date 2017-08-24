@@ -1,0 +1,38 @@
+<div *ngIf="job">
+  <h2>{{job.name}}</h2>
+  <div>
+    <label>id: </label>{{job.id}}
+  </div>
+  <div>
+    <label>State:</label>
+    {{job.state}}
+  </div>
+  <div>
+    <label>workflow: </label>
+    {{job.workflow}}
+  </div>
+  <div>
+    <a href="{{job.uri}}" target="_blank">Job Uri</a>
+  </div>
+  <div>
+    <a href="{{job.log}}" target="_blank">Job Log</a>
+  </div>
+  <div>
+      <label>output: </label>
+      <pre>
+        {{job.output | json}}
+      </pre>
+  </div>
+  <div>
+      <label>input: </label>
+      <pre>
+        {{job.input | json}}
+      </pre>
+  </div>
+  <div>
+      <label>additionalInfo:</label>
+      <pre>
+        {{job.additionalInfo | json}}
+      </pre>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+div#job-list {
+  width: 245px;
+  margin: 5px 0px;
+  border-right: solid 2px;
+}
+
+div#job-list h3 {
+  margin: 5px;
+  border-bottom: solid 2px;
+}
+
+div#job-list .jobs {
+  height: 365px;
+  overflow-y: scroll;
+  display: inline-block;
+  width: 242px;
+}
+
+div.job {
+  width: 219px;
+  margin: 5px 0px 0px 5px;
+  border: solid 1px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+div.job h5 {
+  margin: 0px;
+  width: 205px;
+  display: inline-block;
+}
+
+div.job.Waiting, div.job.TemporaryFailure {
+  background-color: darkorange;
+  color: white;
+}
+
+div.job.Running {
+  background-color: green;
+}
+
+div.job.Success {
+  background-color: darkgreen;
+  color: white;
+}
+
+div.job.Cancelled, div.job.PermanentFailure, div.job.SystemError {
+  background-color: darkred;
+  color: white;
+}

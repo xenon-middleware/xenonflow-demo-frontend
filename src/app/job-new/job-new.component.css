@@ -1,0 +1,15 @@
+fieldset {
+  border: solid 1px;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+legend {
+  width: 250px;
+  margin-left: 15px;
+  padding-left: 15px;
+}
+
+.full-height {
+  height: 100%;
+}
