@@ -1,1 +1,8 @@
+.border-right {
+  border-right: solid 2px;
+}
 
+.btn-gray {
+  background-color: #696969;
+  color: white;
+}

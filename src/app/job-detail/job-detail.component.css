@@ -1,0 +1,63 @@
+h2 {
+  border-bottom: solid 2px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+}
+
+div.job-details {
+  padding-left: 20px;
+}
+
+div.job-header {
+  padding-left: 20px;
+  line-height: 48px;
+  background-color: rgba(110, 110, 110, 1);
+  color: white;
+  border-radius: 5px;
+}
+
+div.job-header .header-part {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.btn-right {
+  float: right;
+}
+
+.btn-group.btn-right {
+  margin-right: 15px;
+}
+
+h2 span.jobid {
+  font-size: .5em;
+}
+
+div.state  {
+  font-size: 2em;
+}
+
+div.state div.state-name {
+  display: inline;
+}
+
+.job-header h3, .job-details h3 {
+  text-transform: capitalize;
+}
+
+.job-header h3 {
+  margin-bottom: 0px;
+}
+
+.job-details h3 {
+  margin-top: 10px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+fa.fa-right {
+  float: right;
+  margin-top: 2px;
+}

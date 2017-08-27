@@ -13,3 +13,12 @@ legend {
 .full-height {
   height: 100%;
 }
+
+form.job-form fieldset legend {
+  margin-bottom: 0px;
+}
+
+form.job-form fieldset.workflow-input label {
+  margin-bottom: 0px;
+  margin-top: -15px;
+}

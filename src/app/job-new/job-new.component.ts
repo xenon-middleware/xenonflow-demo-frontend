@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {WebDAV, Headers} from 'angular-webdav';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-
-const URL = 'http://localhost/webdav';
-const api = 'http://localhost:8080/jobs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { JobService, JobDescription } from '../job.service';
 
 interface Input {
   id: string;
@@ -33,16 +30,6 @@ interface FileLocations {
   [x: string]: FileInput;
 }
 
-export interface WorkflowInput {
-  [x: string]: object;
-}
-
-export interface JobDescription {
-  name: string;
-  input: WorkflowInput;
-  workflow: string;
-}
-
 @Component({
   selector: 'app-job-new',
   templateUrl: './job-new.component.html',
@@ -60,8 +47,8 @@ export class JobNewComponent {
 
   constructor(
     private http: HttpClient,
-    private webdav: WebDAV,
     private fb: FormBuilder,
+    private jobService: JobService,
     private viewContainerRef: ViewContainerRef) {
     this.jobForm = this.fb.group({
       name: ['', Validators.required ],
@@ -142,12 +129,21 @@ export class JobNewComponent {
         const fileToUpload = fi.files[0];
         const dirname = this.jobName;
 
-        this.createDir(dirname).then(dirExists => {
-          this.uploadFile('workflow', fi.files[0], dirname).then(success => {
+        this.jobService.createDir(dirname).then(dirExists => {
+          this.jobService.uploadFile('workflow', fi.files[0], dirname).then(success => {
+            this.files['workflow'] = {
+              id: 'workflow',
+              path: dirname + '/' + fi.files[0].name
+            };
             Promise.all(this.inputFileInput.map(element => {
               const native = element.nativeElement;
               if (native.files && native.files[0]) {
-                return this.uploadFile(native.id, native.files[0], dirname);
+                return this.jobService.uploadFile(native.id, native.files[0], dirname).then(() => {
+                  this.files[native.id] = {
+                    id: native.id,
+                    path: dirname + '/' + native.files[0].name
+                  };
+                });
               }
             })).then( () => {
               console.log('everything should be uploaded now.');
@@ -156,59 +152,6 @@ export class JobNewComponent {
           });
         });
       }
-    });
-  }
-
-  createDir(dirname: string): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      this.webdav.get(`${URL}/${dirname}`).subscribe(
-        (value) => {
-          resolve(true);
-        },
-        (error) => {
-          if (error.status === 404) {
-            this.webdav.mkcol(`${URL}/${dirname}`).subscribe(
-              (value) => {
-                resolve(true);
-              },
-              (err2) => {
-                reject(error);
-              }
-            );
-          } else {
-            reject(error);
-          }
-        }
-      );
-    });
-  }
-
-  uploadFile(id, file, dirname): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = readfile => {
-        const contents: any = readfile.target;
-        const body = contents.result;
-
-        const header =  new Headers();
-        header.append('Content-Type', 'application/octet-stream');
-        this.webdav.put(`${URL}/${dirname}/${file.name}`, body, {headers: header})
-          .subscribe(
-            (value) => {
-              this.files[id] = {
-                id: id,
-                path: dirname + '/' + file.name
-              };
-              console.log('Succesfully uploaded file: ' + file.name);
-              resolve(true);
-            },
-            (error) => {
-              console.log(error);
-              reject(error);
-            }
-          );
-      };
-      reader.readAsArrayBuffer(file);
     });
   }
 
@@ -234,9 +177,10 @@ export class JobNewComponent {
     });
     job.input = input;
 
-    this.http.post(api, job).subscribe(
+    this.jobService.submitJob(job).subscribe(
       (value) => {
         console.log('Submission made');
+        this.jobService.updateList = true;
       },
       (error) => {
         console.log(error);

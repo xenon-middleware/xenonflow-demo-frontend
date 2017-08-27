@@ -5,14 +5,15 @@ html,body {
 
 body {
   margin: 0px;
+  overflow-y: scroll;
 }
 
-nav.bg-inverse {
+.bg-inverse {
   background-color: #292b2c;
   color: white;
 }
 
-nav.bg-inverse a {
+.bg-inverse a {
   color: white;
 }
 

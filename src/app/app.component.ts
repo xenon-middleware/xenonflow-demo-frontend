@@ -11,6 +11,15 @@ import { Job } from './job';
 export class AppComponent implements OnInit {
   panel: string;
 
+  constructor (
+    private jobService: JobService
+  ) {
+    this.jobService.selectedJob.subscribe((value) => {
+      if (value != null) {
+        this.panel = 'job-detail';
+      }
+    });
+  }
   ngOnInit() {
     this.panel = 'job-new';
   }

@@ -1,50 +1,45 @@
 div#job-list {
-  width: 245px;
   margin: 5px 0px;
-  border-right: solid 2px;
 }
 
 div#job-list h3 {
   margin: 5px;
   border-bottom: solid 2px;
+  padding-bottom: 5px;
 }
 
 div#job-list .jobs {
-  height: 365px;
-  overflow-y: scroll;
   display: inline-block;
-  width: 242px;
 }
 
-div.job {
-  width: 219px;
+li.job {
+  width: 215px;
   margin: 5px 0px 0px 5px;
   border: solid 1px;
   border-radius: 5px;
   padding: 5px;
 }
 
-div.job h5 {
-  margin: 0px;
-  width: 205px;
-  display: inline-block;
+li.job .state {
+  border-radius: 5px;
+  padding: 2px 5px;
 }
 
-div.job.Waiting, div.job.TemporaryFailure {
+li.job .Waiting, li.job .TemporaryFailure {
   background-color: darkorange;
   color: white;
 }
 
-div.job.Running {
-  background-color: green;
+li.job .Running {
+  background-color: lightgreen;
 }
 
-div.job.Success {
+li.job .Success {
   background-color: darkgreen;
   color: white;
 }
 
-div.job.Cancelled, div.job.PermanentFailure, div.job.SystemError {
+li.job .Cancelled, li.job .PermanentFailure, li.job .SystemError {
   background-color: darkred;
   color: white;
 }

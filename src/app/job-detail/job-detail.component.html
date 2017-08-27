@@ -1,38 +1,120 @@
 <div *ngIf="job">
-  <h2>{{job.name}}</h2>
-  <div>
-    <label>id: </label>{{job.id}}
+  <h2>{{job.name}} <span class="jobid">({{job.id}})</span></h2>
+  <div class="job-header">
+    <div class="state header-part">
+      <span class="job-status">
+          <fa *ngIf="job.state == 'Waiting'" name="pause" style="color: lightgray"></fa>
+          <fa *ngIf="job.state == 'Running'" name="cog" animation="spin" style="color: limegreen"></fa>
+          <fa *ngIf="job.state == 'Success'" name="check" style="color: limegreen"></fa>
+          <fa *ngIf="job.state == 'Cancelled'" name="ban" style="color: lightgray"></fa>
+          <fa *ngIf="job.state == 'PermanentFailure' || job.state =='SystemError'" fixed="true" name="times" style="color: darkred;" ></fa>
+          <fa *ngIf="job.state == 'TemporaryFailure'" name="exclamation-triangle" style="color: orange;" ></fa>
+        </span>
+        <div class="state-name">{{job.state}}</div>
+    </div>
+    <div class="header-part">
+      <h3>| Workflow: {{job.workflow}} |</h3>
+    </div>
+    <div class="btn-group btn-right header-part">
+        <button class="btn btn-warning" (click)="cancelJob(confirmCancel)">Cancel</button>
+        <button class="btn btn-danger" (click)="deleteJob(confirmDelete)">Delete</button>
+    </div>
+    <div class="btn-group btn-right header-part">
+      <a class="btn btn-info" href="{{job.uri}}" target="_blank">Job Uri</a>
+      <a class="btn btn-info" href="{{job.log}}" target="_blank">Job Log</a>
+    </div>
   </div>
-  <div>
-    <label>State:</label>
-    {{job.state}}
-  </div>
-  <div>
-    <label>workflow: </label>
-    {{job.workflow}}
-  </div>
-  <div>
-    <a href="{{job.uri}}" target="_blank">Job Uri</a>
-  </div>
-  <div>
-    <a href="{{job.log}}" target="_blank">Job Log</a>
-  </div>
-  <div>
-      <label>output: </label>
-      <pre>
-        {{job.output | json}}
-      </pre>
-  </div>
-  <div>
-      <label>input: </label>
-      <pre>
-        {{job.input | json}}
-      </pre>
-  </div>
-  <div>
-      <label>additionalInfo:</label>
-      <pre>
-        {{job.additionalInfo | json}}
-      </pre>
+  <div class="job-details">
+    <div *ngIf="hasStdErr() || stdoutKeys().length > 0">
+        <h3>output: </h3>
+        <table class="table table-striped">
+            <thead class="thead-default">
+              <tr>
+                <th class="w-25">Name</th><th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let key of stdoutKeys()">
+                  <td>{{key}}</td>
+                  <td>
+                    <a class="btn btn-info w-25" *ngIf="isFile(job.output.stdout[key])" target="_blank" href="{{job.output.stdout[key].location}}">View {{job.output.stdout[key].basename}} <fa name="external-link" class="fa-right" fixed="true"></fa></a>
+                    <span *ngIf="!isFile(job.output.stdout[key])">{{job.output.stdout[key]}}</span>
+                  </td>
+                </tr>
+                <tr *ngIf="hasStdErr()">
+                  <td>Standard Error: </td><td><a target="_blank" class="btn btn-info w-25" href="{{job.output['stderr.txt']}}">View Standard Error <fa name="external-link" class="fa-right" fixed="true"></fa></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h3>input: </h3>
+        <table class="table table-striped">
+          <thead class="thead-default">
+            <tr>
+              <th class="w-25">Key</th><th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let key of keys(job.input)">
+              <td>{{key}}</td>
+              <td>
+                  <a class="btn btn-info w-25" *ngIf="isFile(job.input[key])" target="_blank" href="{{jobService.webdavUrl}}/{{job.input[key].path}}">{{job.input[key].path}} <fa name="external-link" class="fa-right"  fixed="true"></fa></a>
+                  <span *ngIf="!isFile(job.input[key])">{{job.input[key]}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <h3>additionalInfo:</h3>
+        <table class="table table-striped">
+          <thead class="thead-default">
+            <tr>
+              <th class="w-25">Key</th><th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let key of keys(job.additionalInfo)">
+              <td class="capitalize">{{key}}</td>
+              <td *ngIf="!isObject(job.additionalInfo[key]">{{job.additionalInfo[key]}}</td>
+              <td *ngIf="isObject(job.additionalInfo[key] && key === 'error'">{{job.additionalInfo[key].message}}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
   </div>
 </div>
+
+
+<ng-template #confirmDelete let-e="close" let-c="dismiss" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Confirm Delete</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to delete this job. This cannot be undone.
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="c('Cancel')">Cancel</button>
+        <a class="btn btn-danger btn-ok" (click)="e('Delete')">Delete</a>
+    </div>
+</ng-template>
+
+<ng-template #confirmCancel let-e="close" let-c="dismiss" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Confirm Cancel</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to cancel this job. This cannot be undone.
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="c('Stop')">Stop</button>
+        <a class="btn btn-danger btn-ok" (click)="e('Delete')">Cancel Job</a>
+    </div>
+</ng-template>

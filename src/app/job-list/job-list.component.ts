@@ -19,13 +19,29 @@ export class JobListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    IntervalObservable.create(1000)
+    this.jobService.getAllJobs().subscribe(data => {
+      // Read the result field from the JSON response.
+      this.jobs = data;
+    });
+    IntervalObservable.create(10000)
       .subscribe(() => {
         // Make the HTTP request:
-        this.http.get<Job[]>('http://localhost:8080/jobs/').subscribe(data => {
+        this.jobService.getAllJobs().subscribe(data => {
           // Read the result field from the JSON response.
           this.jobs = data;
+        });
       });
+
+    this.jobService.getUpdateListObserver.subscribe((value) => {
+      if (value) {
+        setTimeout(() => {
+          this.jobService.getAllJobs().subscribe(data => {
+            // Read the result field from the JSON response.
+            this.jobs = data;
+          });
+          this.jobService.updateList = false;
+        }, 1000);
+      }
     });
   }
 

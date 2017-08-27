@@ -2,18 +2,15 @@
   <ul class="nav">
     <a class="navbar-brand" href="#">CWL Demo Frontend</a>
     <li class="nav-item">
-      <a class="nav-link" href="#" (click)="panel='job-new'">New Job</a>
+      <a class="nav-link btn btn-gray" href="#" (click)="panel='job-new'">New Job</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#" (click)="panel='job-detail'">Job Details</a>
-      </li>
   </ul>
 </nav>
 
 
 <div class="container-fluid full-height">
   <div class="row">
-    <div class="col-2">
+    <div class="col-2 border-right">
       <app-job-list></app-job-list>
     </div>
     <div class="col">

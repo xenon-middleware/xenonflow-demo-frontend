@@ -1,17 +1,13 @@
-<div id="job-list">
+<div id="job-list" class="navbar-default sidebar">
   <h3>Jobs</h3>
-  <div class="jobs">
-    <div *ngFor="let job of jobs" class="job {{job.state}}" id="{{job.id}}" (click)="onSelect(job)">
-      <h5>{{job.name}}-{{job.id | slice:0:8}}</h5>
-      ({{job.state}})
-      <!-- <span class="job-status">
-        <fa *ngIf="job.state == 'Waiting'" name="pauze" style="color: gray"></fa>
-        <fa *ngIf="job.state == 'Running'" name="cog" animation="spin" style="color: darkgreen"></fa>
-        <fa *ngIf="job.state == 'Success'" name="check" style="color: darkgreen"></fa>
-        <fa *ngIf="job.state == 'Cancelled'" name="ban" style="color: gray"></fa>
-        <fa *ngIf="job.state == 'PermanentFailure' || job.state =='SystemError'" fixed="true" name="times" style="color: darkred;" ></fa>
-        <fa *ngIf="job.state == 'TemporaryFailure'" name="exclamation-triangle" style="color: orange;" ></fa>
-      </span> -->
-    </div>
+  <div class="sidebar-nav">
+    <ul class="nav jobs">
+      <li *ngFor="let job of jobs" class="job" id="{{job.id}}" (click)="onSelect(job)">
+        <h5>{{job.name}}-{{job.id | slice:0:8}}</h5>
+        <div class="state {{job.state}}">
+          Status: <span style="float: right">{{job.state}}</span>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
