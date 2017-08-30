@@ -1,0 +1,8 @@
+<span class="job-status">
+  <fa *ngIf="job.state == 'Waiting'" name="pause"></fa>
+  <fa *ngIf="job.state == 'Running'" name="cog"></fa>
+  <fa *ngIf="job.state == 'Success'" name="check"></fa>
+  <fa *ngIf="job.state == 'Cancelled'" name="ban"></fa>
+  <fa *ngIf="job.state == 'PermanentFailure' || job.state =='SystemError'" fixed="true" name="times"></fa>
+  <fa *ngIf="job.state == 'TemporaryFailure'" name="exclamation-triangle"></fa>
+</span>

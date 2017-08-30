@@ -1,19 +1,20 @@
-<nav class="navbar bg-inverse">
-  <ul class="nav">
-    <a class="navbar-brand" href="#">CWL Demo Frontend</a>
-    <li class="nav-item">
-      <a class="nav-link btn btn-gray" href="#" (click)="panel='job-new'">New Job</a>
-    </li>
-  </ul>
-</nav>
-
-
-<div class="container-fluid full-height">
+<div class="container full-height">
   <div class="row">
-    <div class="col-2 border-right">
+    <div class="col">
+      <nav class="navbar bg top-panel-border">
+          <ul class="nav">
+            <li>
+              <a class="navbar-brand" href="#">CWL Demo Frontend</a>
+            </li>
+          </ul>
+        </nav>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
       <app-job-list></app-job-list>
     </div>
-    <div class="col">
+    <div class="col-sm-9">
       <app-job-detail *ngIf="panel=='job-detail'"></app-job-detail>
       <app-job-new *ngIf="panel=='job-new'"></app-job-new>
     </div>

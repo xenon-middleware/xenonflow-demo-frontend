@@ -17,6 +17,8 @@ export class AppComponent implements OnInit {
     this.jobService.selectedJob.subscribe((value) => {
       if (value != null) {
         this.panel = 'job-detail';
+      } else {
+        this.panel = 'job-new';
       }
     });
   }

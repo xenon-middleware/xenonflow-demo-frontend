@@ -1,8 +1,23 @@
-.border-right {
-  border-right: solid 2px;
+.bg-inverse {
+  background-color: #292b2c;
+  color: white;
 }
 
-.btn-gray {
-  background-color: #696969;
+.bg-inverse a {
   color: white;
+}
+
+.bg {
+  background-color: white;
+  color: #282B30;
+  margin: 15px 0px;
+}
+
+.bg a {
+  color: #282B30;
+}
+
+.top-panel-border {
+  border: solid 1px #282B30;
+  border-radius: 5px;
 }

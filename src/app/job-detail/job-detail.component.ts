@@ -22,7 +22,7 @@ export class JobDetailComponent implements OnInit {
     private jobService: JobService,
     private modalService: NgbModal
   ) {
-    IntervalObservable.create(10000)
+    IntervalObservable.create(500)
     .subscribe(() => {
       // Make the HTTP request:
       if (this.job != null) {
@@ -37,23 +37,12 @@ export class JobDetailComponent implements OnInit {
   ngOnInit() {
     this.jobService.selectedJob.subscribe((value: Job) => {
       this.job = value;
+      if (this.job != null) {
+        this.jobService.getJob(this.job.id).subscribe(data => {
+          this.job = data;
+        });
+      }
     });
-  }
-
-  outputKeys(): Array<string> {
-    return Object.keys(this.job.output);
-  }
-
-  hasStdErr(): boolean {
-    return 'stderr.txt' in this.job.output;
-  }
-
-  stdoutKeys(): Array<string> {
-    if ('stdout' in this.job.output) {
-      return Object.keys(this.job.output['stdout']);
-    } else {
-      return [];
-    }
   }
 
   keys(object): Array<string> {
@@ -73,7 +62,7 @@ export class JobDetailComponent implements OnInit {
       this.jobService.deleteJob(this.job.id).subscribe(
         (success) => {
           console.log('Job delete request sent');
-          this.job = null;
+          this.jobService.setSelectedJob = null;
           this.jobService.updateList = true;
         },
         (error) => {
@@ -83,6 +72,15 @@ export class JobDetailComponent implements OnInit {
     }, (reason) => {
       // dismissed do nothing
     });
+  }
+
+  isCancelable(): boolean {
+    if (this.job) {
+      return this.job.state === 'Running' ||
+             this.job.state === 'Waiting';
+    } else {
+      return false;
+    }
   }
 
   cancelJob(dialog): void {

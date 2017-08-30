@@ -1,13 +1,20 @@
-<div id="job-list" class="navbar-default sidebar">
-  <h3>Jobs</h3>
-  <div class="sidebar-nav">
-    <ul class="nav jobs">
-      <li *ngFor="let job of jobs" class="job" id="{{job.id}}" (click)="onSelect(job)">
-        <h5>{{job.name}}-{{job.id | slice:0:8}}</h5>
-        <div class="state {{job.state}}">
-          Status: <span style="float: right">{{job.state}}</span>
-        </div>
-      </li>
-    </ul>
+<div class="left-panel-border">
+  <div id="job-list" class="navbar-default sidebar">
+    <div class="job-list-header">
+      <h4>All Jobs</h4>
+      <a class="btn btn-primary btn-right" href="#" (click)="onSelect(null)">NEW JOB</a>
+    </div>
+    <div class="hr"></div>
+    <div class="sidebar-nav">
+      <ul class="nav jobs">
+        <li *ngFor="let job of jobs" class="job {{job.state | lowercase}}" id="{{job.id}}" (click)="onSelect(job)">
+          <h5>{{job.name}}</h5>
+          <span>Started: {{job.additionalInfo.startedAt | date: 'yyyy-MM-dd HH:mm:ss'}}</span>
+          <div class="state {{job.state | lowercase}} {{job.state | stateAlert}}">
+            {{job.state | stateName}}
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

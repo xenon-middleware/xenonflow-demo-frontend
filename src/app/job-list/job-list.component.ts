@@ -23,7 +23,7 @@ export class JobListComponent implements OnInit {
       // Read the result field from the JSON response.
       this.jobs = data;
     });
-    IntervalObservable.create(10000)
+    IntervalObservable.create(500)
       .subscribe(() => {
         // Make the HTTP request:
         this.jobService.getAllJobs().subscribe(data => {
@@ -40,7 +40,7 @@ export class JobListComponent implements OnInit {
             this.jobs = data;
           });
           this.jobService.updateList = false;
-        }, 1000);
+        }, 500);
       }
     });
   }

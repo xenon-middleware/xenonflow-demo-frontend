@@ -1,28 +1,31 @@
-<h2>New Job</h2>
-<form class="job-form" [formGroup]="jobForm" novalidate>
-  <fieldset class="workflow-input">
-    <legend>Name and Workflow</legend>
-    <label class="center-block">Job Name:
-      <input class="form-control" formControlName="name">
-    </label>
-    <label class="center-block">Workflow File:
-      <input type="file" #fileInput class="form-control">
-    </label>
-    <button class="btn btn-primary" (click)="processWorkflow()">GO</button>
-  </fieldset>
-  <fieldset *ngIf="inputs.length > 0" [formGroup]="inputControls">
-    <legend>Inputs</legend>
-    <table>
-      <tr *ngFor="let input of inputs">
-        <td class="w-25"><label class="center-block">{{input.id}}:</label></td>
-        <td>
-          <input *ngIf="input.type === 'file'" id="{{input.id}}" #inputFileInput class="form-control" type="{{input.type}}">
-          <input *ngIf="input.type !== 'file'" id="{{input.id}}" class="form-control" formControlName="{{input.id}}" type="{{input.type}}">
-        </td>
-      </tr>
-    </table>
-    <div class="btn-group" style="margin-top: 10px;">
-      <button class="btn btn-primary" (click)="submit()">Submit</button>
-    </div>
-  </fieldset>
-</form>
+<div class="new-job-panel right-panel-border">
+  <h2>New Job</h2>
+  <div class="job-form-container">
+    <form class="job-form" [formGroup]="jobForm" novalidate>
+      <fieldset class="workflow-input">
+        <label class="center-block">Job Name:
+          <input class="form-control" formControlName="name">
+        </label>
+        <label class="center-block">Workflow File:
+          <input type="file" #fileInput class="form-control">
+        </label>
+        <button class="btn btn-primary" (click)="processWorkflow()">GO</button>
+      </fieldset>
+      <fieldset *ngIf="inputs.length > 0" [formGroup]="inputControls">
+        <legend>Inputs</legend>
+        <table>
+          <tr *ngFor="let input of inputs">
+            <td class="w-25"><label class="center-block">{{input.id}}:</label></td>
+            <td>
+              <input *ngIf="input.type === 'file'" id="{{input.id}}" #inputFileInput class="form-control" type="{{input.type}}">
+              <input *ngIf="input.type !== 'file'" id="{{input.id}}" class="form-control" formControlName="{{input.id}}" type="{{input.type}}">
+            </td>
+          </tr>
+        </table>
+        <div class="btn-group" style="margin-top: 10px;">
+          <button class="btn btn-primary" (click)="submit()">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

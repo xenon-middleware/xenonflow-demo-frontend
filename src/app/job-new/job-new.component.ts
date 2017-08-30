@@ -78,6 +78,11 @@ export class JobNewComponent {
           const contents: any = file.target;
           workflow = JSON.parse(contents.result);
 
+          Object.keys(this.inputControls.controls).forEach((control) => {
+            this.inputControls.removeControl(control);
+          });
+          this.inputs = [];
+
           console.log(workflow);
 
           const id: string = workflow.id;
