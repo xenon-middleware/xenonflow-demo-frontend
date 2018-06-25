@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {Observable} from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { JobService} from '../job.service';
 import { Job } from '../job';
@@ -19,16 +19,19 @@ export class JobDetailComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private jobService: JobService,
+    protected jobService: JobService,
     private modalService: NgbModal
   ) {
-    IntervalObservable.create(500)
+    IntervalObservable.create(2500)
     .subscribe(() => {
       // Make the HTTP request:
       if (this.job != null) {
-        this.jobService.getJob(this.job.id).subscribe(data => {
+        this.jobService.getJob(this.job.id).subscribe((data) => {
           // Read the result field from the JSON response.
           this.job = data;
+        },
+        (error) => {
+          console.log(error);
         });
       }
     });
@@ -38,8 +41,11 @@ export class JobDetailComponent implements OnInit {
     this.jobService.selectedJob.subscribe((value: Job) => {
       this.job = value;
       if (this.job != null) {
-        this.jobService.getJob(this.job.id).subscribe(data => {
+        this.jobService.getJob(this.job.id).subscribe((data) => {
           this.job = data;
+        },
+        (error) => {
+          console.log(error);
         });
       }
     });
@@ -50,11 +56,11 @@ export class JobDetailComponent implements OnInit {
   }
 
   isFile(object): boolean {
-    return (typeof object === 'object') && object.class === 'File';
+    return this.isObject(object) && object.class === 'File';
   }
 
   isObject(object): boolean {
-    return (typeof object === 'object');
+    return (object !== null && typeof object === 'object' && !Array.isArray(object));
   }
 
   deleteJob(dialog): void {

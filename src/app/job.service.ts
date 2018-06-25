@@ -19,7 +19,7 @@ export class JobService {
   private _selectedJob: BehaviorSubject<Job>;
   private _updateList: BehaviorSubject<boolean>;
   private api = 'http://localhost:8080/jobs';
-  private webdav_url = 'http://localhost:5050';
+  private webdav_url = 'http://localhost:5050/';
 
   constructor(
     private http: HttpClient,

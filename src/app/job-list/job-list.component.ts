@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { JobService } from '../job.service';
 import { Job } from '../job';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-job-list',
@@ -15,7 +16,8 @@ export class JobListComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private jobService: JobService
+    private jobService: JobService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -23,7 +25,7 @@ export class JobListComponent implements OnInit {
       // Read the result field from the JSON response.
       this.jobs = data;
     });
-    IntervalObservable.create(500)
+    IntervalObservable.create(2500)
       .subscribe(() => {
         // Make the HTTP request:
         this.jobService.getAllJobs().subscribe(data => {
@@ -40,7 +42,7 @@ export class JobListComponent implements OnInit {
             this.jobs = data;
           });
           this.jobService.updateList = false;
-        }, 500);
+        }, 2500);
       }
     });
   }
@@ -49,4 +51,21 @@ export class JobListComponent implements OnInit {
     this.jobService.setSelectedJob = job;
   }
 
+  deleteAllJobs(dialog): void {
+    this.modalService.open(dialog).result.then((result) => {
+      this.jobs.forEach((job: Job) => {
+        this.jobService.deleteJob(job.id).subscribe(
+          (success) => {
+            console.log('Job delete request sent for: ' + job.id);
+          },
+          (error) => {
+            console.log('Error deleting job: ' + error);
+          }
+        );
+      });
+    }, (reason) => {
+      // dismissed do nothing
+    });
+    this.jobService.updateList = true;
+  }
 }
